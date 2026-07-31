@@ -58,7 +58,7 @@ export default function InvoiceListPage() {
     onError: () => message.error('Failed to cancel invoice'),
   })
 
-  const handleDownloadPdf = async (id: string, invoiceNo: string) => {
+  const handleDownloadPdf = async (id: string, _invoiceNo: string) => {
     try {
       const res = await getInvoicePdf(id)
       const url = URL.createObjectURL(res.data as Blob)

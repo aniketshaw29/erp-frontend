@@ -121,7 +121,7 @@ export default function PaymentPage() {
         amount: inv.outstandingAmount,
       }))
 
-    const customer = partiesData?.data?.find((p) => p.id === values.customerId)
+    const customer = partiesData?.find((p) => p.id === values.customerId)
 
     submitMutation.mutate({
       customerId: values.customerId,
@@ -227,7 +227,7 @@ export default function PaymentPage() {
                 allowClear
                 placeholder="Filter by customer"
                 optionFilterProp="label"
-                options={partiesData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+                options={partiesData?.map((p) => ({ value: p.id, label: p.name }))}
                 onChange={(val) => {
                   setCustomerId(val)
                   setSelectedInvoiceIds([])

@@ -73,13 +73,13 @@ export default function EInvoicePage() {
     queryFn: () =>
       getInvoices({ size: 200 }).then((r) => {
         const invoices = r.data?.data ?? []
-        return invoices.filter((inv: any) => inv.irn)
+        return invoices.filter((inv: any) => inv.irn) as unknown as GeneratedInvoice[]
       }),
   })
 
   const generateMutation = useMutation({
     mutationFn: (invoiceId: string) => generateIrn(invoiceId),
-    onSuccess: (res, invoiceId) => {
+    onSuccess: (res, _invoiceId) => {
       const irn = res.data?.data?.irn ?? res.data?.irn ?? ''
       message.success(
         <span>

@@ -3,7 +3,6 @@ import {
   Button,
   Tabs,
   Space,
-  Popconfirm,
   message,
   Modal,
   Form,
@@ -206,7 +205,7 @@ export default function PurchaseBillListPage() {
           placeholder="Filter by supplier"
           optionFilterProp="label"
           style={{ width: 240 }}
-          options={suppliersData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+          options={suppliersData?.map((p) => ({ value: p.id, label: p.name }))}
           onChange={(val) => {
             setSupplierFilter(val)
             onPageChange(1, pageSize)

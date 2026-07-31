@@ -25,7 +25,7 @@ import AmountDisplay from '../../components/AmountDisplay'
 import { getPartyStatement } from '../../api/modules/accounts.api'
 import { getParties } from '../../api/modules/party.api'
 
-const { Text, Title } = Typography
+const { Text } = Typography
 const { RangePicker } = DatePicker
 
 type DocType = 'INVOICE' | 'PAYMENT' | 'BILL' | 'CREDIT_NOTE' | string
@@ -72,7 +72,7 @@ export default function PartyStatementPage() {
     queryFn: () => getParties({ size: 500 }).then((r) => r.data),
   })
 
-  const parties = partiesData?.data ?? []
+  const parties = partiesData ?? []
 
   const { data: statementData, isLoading, isFetching } = useQuery<PartyStatementData>({
     queryKey: ['party-statement', loadParams],

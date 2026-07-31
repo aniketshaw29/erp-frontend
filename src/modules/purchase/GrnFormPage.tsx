@@ -170,7 +170,7 @@ export default function GrnFormPage() {
 
     const subtotal = lines.reduce((s, l) => s + l.taxableAmount, 0)
     const totalGst = lines.reduce((s, l) => s + l.gstAmount, 0)
-    const supplier = partiesData?.data?.find((p) => p.id === values.supplierId)
+    const supplier = partiesData?.find((p) => p.id === values.supplierId)
     const warehouse = warehousesData?.find((w) => w.id === values.warehouseId)
 
     return {
@@ -237,7 +237,7 @@ export default function GrnFormPage() {
         if (l.key !== key) return l
         const updated = { ...l, [field]: value }
         if (field === 'itemId') {
-          const item = itemsData?.data?.find((i) => i.id === value)
+          const item = itemsData?.find((i) => i.id === value)
           if (item) {
             updated.itemName = item.name
             updated.itemCode = item.code
@@ -269,7 +269,7 @@ export default function GrnFormPage() {
           onChange={(val) => updateLine(record.key, 'itemId', val as string)}
           style={{ width: '100%' }}
           optionFilterProp="label"
-          options={itemsData?.data?.map((i) => ({ value: i.id, label: `${i.code} — ${i.name}` }))}
+          options={itemsData?.map((i) => ({ value: i.id, label: `${i.code} — ${i.name}` }))}
           disabled={!!record.poLineId}
         />
       ),
@@ -437,7 +437,7 @@ export default function GrnFormPage() {
                 showSearch
                 placeholder="Select supplier"
                 optionFilterProp="label"
-                options={partiesData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+                options={partiesData?.map((p) => ({ value: p.id, label: p.name }))}
               />
             </Form.Item>
           </Col>

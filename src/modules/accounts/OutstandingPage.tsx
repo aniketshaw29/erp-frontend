@@ -260,7 +260,7 @@ function ReceivablesAgingTab() {
       scroll={{ x: 900 }}
       summary={() => (
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0} fixed="left">
+          <Table.Summary.Cell index={0}>
             <Text strong>Total</Text>
           </Table.Summary.Cell>
           {(['current', 'days1to30', 'days31to60', 'days61to90', 'days90plus'] as const).map((f, i) => (
@@ -474,7 +474,7 @@ function PayablesAgingTab() {
       scroll={{ x: 900 }}
       summary={() => (
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0} fixed="left">
+          <Table.Summary.Cell index={0}>
             <Text strong>Total</Text>
           </Table.Summary.Cell>
           {(['current', 'days1to30', 'days31to60', 'days61to90', 'days90plus'] as const).map((f, i) => (

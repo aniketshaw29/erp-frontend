@@ -174,7 +174,7 @@ function AgingReportTab() {
       scroll={{ x: 900 }}
       summary={() => (
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0} fixed="left">
+          <Table.Summary.Cell index={0}>
             <Text strong>Total</Text>
           </Table.Summary.Cell>
           <Table.Summary.Cell index={1} align="right">

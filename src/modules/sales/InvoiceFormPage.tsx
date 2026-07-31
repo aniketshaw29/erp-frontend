@@ -205,7 +205,7 @@ export default function InvoiceFormPage() {
         const updated: LineItem = { ...l, [field]: value }
 
         if (field === 'itemId') {
-          const item = itemsData?.data?.find((i) => i.id === value)
+          const item = itemsData?.find((i) => i.id === value)
           if (item) {
             updated.itemName = item.name
             updated.itemCode = item.code
@@ -236,7 +236,7 @@ export default function InvoiceFormPage() {
     )
   }
 
-  const handleRateBlur = (key: string, rate: number, mrp: number) => {
+  const handleRateBlur = (_key: string, rate: number, mrp: number) => {
     if (mrp > 0 && rate > mrp) {
       message.warning(`Rate ₹${rate} exceeds MRP ₹${mrp}`)
     }
@@ -279,7 +279,7 @@ export default function InvoiceFormPage() {
     const totalGst = lines.reduce((s, l) => s + l.gstAmount, 0)
     const grandTotal = taxableTotal + totalGst
 
-    const customer = partiesData?.data?.find((p) => p.id === values.customerId)
+    const customer = partiesData?.find((p) => p.id === values.customerId)
 
     return {
       customerId: values.customerId,
@@ -341,7 +341,7 @@ export default function InvoiceFormPage() {
           onChange={(val) => updateLine(record.key, 'itemId', val as string)}
           style={{ width: '100%' }}
           optionFilterProp="label"
-          options={itemsData?.data?.map((i) => ({
+          options={itemsData?.map((i) => ({
             value: i.id,
             label: `${i.code} — ${i.name}`,
           }))}
@@ -554,7 +554,7 @@ export default function InvoiceFormPage() {
                 showSearch
                 placeholder="Select customer"
                 optionFilterProp="label"
-                options={partiesData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+                options={partiesData?.map((p) => ({ value: p.id, label: p.name }))}
               />
             </Form.Item>
           </Col>

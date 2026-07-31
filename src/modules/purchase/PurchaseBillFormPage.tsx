@@ -122,7 +122,7 @@ export default function PurchaseBillFormPage() {
 
     const subtotal = lines.reduce((s, l) => s + l.taxableAmount, 0)
     const totalGst = lines.reduce((s, l) => s + l.cgstAmount + l.sgstAmount + l.igstAmount, 0)
-    const supplier = partiesData?.data?.find((p) => p.id === values.supplierId)
+    const supplier = partiesData?.find((p) => p.id === values.supplierId)
 
     return {
       supplierId: values.supplierId,
@@ -184,7 +184,7 @@ export default function PurchaseBillFormPage() {
         if (l.key !== key) return l
         const updated = { ...l, [field]: value }
         if (field === 'itemId') {
-          const item = itemsData?.data?.find((i) => i.id === value)
+          const item = itemsData?.find((i) => i.id === value)
           if (item) {
             updated.itemName = item.name
             updated.gstRate = item.gstRate
@@ -218,7 +218,7 @@ export default function PurchaseBillFormPage() {
           onChange={(val) => updateLine(record.key, 'itemId', val ?? '')}
           style={{ width: '100%' }}
           optionFilterProp="label"
-          options={itemsData?.data?.map((i) => ({ value: i.id, label: `${i.code} — ${i.name}` }))}
+          options={itemsData?.map((i) => ({ value: i.id, label: `${i.code} — ${i.name}` }))}
         />
       ),
     },
@@ -379,7 +379,7 @@ export default function PurchaseBillFormPage() {
                 showSearch
                 placeholder="Select supplier"
                 optionFilterProp="label"
-                options={partiesData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+                options={partiesData?.map((p) => ({ value: p.id, label: p.name }))}
               />
             </Form.Item>
           </Col>

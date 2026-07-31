@@ -11,7 +11,6 @@ import {
   Space,
   Typography,
   Divider,
-  Badge,
   message,
   Tag,
   Tooltip,
@@ -370,7 +369,7 @@ export default function JournalEntryPage() {
   })
 
   const leafAccounts = flattenLeafAccounts(accountsData ?? [])
-  const parties: Party[] = partiesData?.data ?? []
+  const parties: Party[] = partiesData ?? []
 
   const entries: JournalEntry[] = Array.isArray(journalData) ? journalData : []
 

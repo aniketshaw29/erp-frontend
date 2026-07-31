@@ -21,7 +21,7 @@ import PageHeader from '../../components/PageHeader'
 import AmountDisplay from '../../components/AmountDisplay'
 import { getChartOfAccounts, getAccountLedger } from '../../api/modules/accounts.api'
 
-const { Text, Link } = Typography
+const { Text } = Typography
 const { RangePicker } = DatePicker
 
 interface Account {

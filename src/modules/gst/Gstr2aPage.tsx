@@ -29,7 +29,7 @@ import PageHeader from '../../components/PageHeader'
 import AmountDisplay from '../../components/AmountDisplay'
 import { reconcileGstr2a } from '../../api/modules/gst.api'
 
-const { Text, Title } = Typography
+const { Text } = Typography
 const { Dragger } = Upload
 
 const MONTHS = [

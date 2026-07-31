@@ -175,7 +175,7 @@ export default function CreditNoteFormPage() {
         const updated: LineItem = { ...l, [field]: value }
 
         if (field === 'itemId') {
-          const item = itemsData?.data?.find((i) => i.id === value)
+          const item = itemsData?.find((i) => i.id === value)
           if (item) {
             updated.itemName = item.name
             updated.itemCode = item.code
@@ -226,7 +226,7 @@ export default function CreditNoteFormPage() {
 
     const subtotal = lines.reduce((s, l) => s + l.taxableAmount, 0)
     const totalGst = lines.reduce((s, l) => s + l.gstAmount, 0)
-    const customer = partiesData?.data?.find((p) => p.id === values.customerId)
+    const customer = partiesData?.find((p) => p.id === values.customerId)
     const selectedInvoice = customerInvoices.find((i) => i.id === values.invoiceId)
 
     return {
@@ -307,7 +307,7 @@ export default function CreditNoteFormPage() {
           onChange={(val) => updateLine(record.key, 'itemId', val as string)}
           style={{ width: '100%' }}
           optionFilterProp="label"
-          options={itemsData?.data?.map((i) => ({
+          options={itemsData?.map((i) => ({
             value: i.id,
             label: `${i.code} — ${i.name}`,
           }))}
@@ -490,7 +490,7 @@ export default function CreditNoteFormPage() {
                 showSearch
                 placeholder="Select customer"
                 optionFilterProp="label"
-                options={partiesData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+                options={partiesData?.map((p) => ({ value: p.id, label: p.name }))}
                 onChange={(val) => {
                   setCustomerId(val)
                   form.setFieldValue('invoiceId', undefined)

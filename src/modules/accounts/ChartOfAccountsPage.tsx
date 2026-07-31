@@ -134,15 +134,6 @@ function buildFlatList(accounts: Account[]): Account[] {
   return result
 }
 
-function buildTreeSelectOptions(accounts: Account[]): any[] {
-  return accounts.map((acc) => ({
-    value: acc.id,
-    title: `${acc.code} — ${acc.name}`,
-    disabled: acc.isLeaf,
-    children: acc.children ? buildTreeSelectOptions(acc.children) : [],
-  }))
-}
-
 function AccountDrawer({
   open,
   mode,
@@ -164,8 +155,6 @@ function AccountDrawer({
       parentId: mode === 'add-child' ? parentAccount?.id : values.parentId ?? null,
     })
   }
-
-  const treeOptions = buildTreeSelectOptions(allAccounts)
 
   return (
     <Drawer

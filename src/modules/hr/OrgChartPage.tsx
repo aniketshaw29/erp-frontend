@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Tree, Badge, Card, Empty, Spin } from 'antd'
-import type { TreeDataNode } from 'antd'
+import type { TreeDataNode, TreeProps } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import PageHeader from '../../components/PageHeader'
 import EmployeeFormDrawer from './EmployeeFormDrawer'
@@ -82,9 +82,9 @@ export default function OrgChartPage() {
 
   const treeData = buildTreeData(departments)
 
-  const handleSelect = (
-    _selectedKeys: (string | number)[],
-    info: { node: { key: string | number } }
+  const handleSelect: NonNullable<TreeProps['onSelect']> = (
+    _selectedKeys,
+    info
   ) => {
     const key = String(info.node.key)
     if (key.startsWith('emp-')) {

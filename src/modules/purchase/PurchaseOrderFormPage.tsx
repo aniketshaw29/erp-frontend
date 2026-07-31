@@ -129,7 +129,7 @@ export default function PurchaseOrderFormPage() {
   const saveMutation = useMutation({
     mutationFn: (payload: any) =>
       isEdit ? updatePurchaseOrder(id!, payload) : createPurchaseOrder(payload),
-    onSuccess: (res) => {
+    onSuccess: (_res) => {
       message.success(isEdit ? 'Purchase order updated' : 'Purchase order created')
       queryClient.invalidateQueries({ queryKey: ['purchase-orders'] })
       navigate('/purchase/orders')
@@ -184,7 +184,7 @@ export default function PurchaseOrderFormPage() {
 
     return {
       supplierId: values.supplierId,
-      supplierName: partiesData?.data?.find((p) => p.id === values.supplierId)?.name ?? '',
+      supplierName: partiesData?.find((p) => p.id === values.supplierId)?.name ?? '',
       orderDate: values.orderDate.format('YYYY-MM-DD'),
       expectedDeliveryDate: values.expectedDeliveryDate?.format('YYYY-MM-DD'),
       notes: values.notes,
@@ -217,7 +217,7 @@ export default function PurchaseOrderFormPage() {
         if (l.key !== key) return l
         const updated = { ...l, [field]: value }
         if (field === 'itemId') {
-          const item = itemsData?.data?.find((i) => i.id === value)
+          const item = itemsData?.find((i) => i.id === value)
           if (item) {
             updated.itemName = item.name
             updated.itemCode = item.code
@@ -247,7 +247,7 @@ export default function PurchaseOrderFormPage() {
           onChange={(val) => updateLine(record.key, 'itemId', val as string)}
           style={{ width: '100%' }}
           optionFilterProp="label"
-          options={itemsData?.data?.map((i) => ({
+          options={itemsData?.map((i) => ({
             value: i.id,
             label: `${i.code} — ${i.name}`,
           }))}
@@ -387,7 +387,7 @@ export default function PurchaseOrderFormPage() {
                 showSearch
                 placeholder="Select supplier"
                 optionFilterProp="label"
-                options={partiesData?.data?.map((p) => ({ value: p.id, label: p.name }))}
+                options={partiesData?.map((p) => ({ value: p.id, label: p.name }))}
               />
             </Form.Item>
           </Col>
