@@ -102,6 +102,11 @@ const menuItems: MenuItem[] = [
     key: '/reports',
     icon: <BarChartOutlined />,
     label: 'Reports',
+    children: [
+      { key: '/reports/sales', label: 'Sales Reports' },
+      { key: '/reports/purchase', label: 'Purchase Reports' },
+      { key: '/reports/inventory', label: 'Inventory Reports' },
+    ],
   },
   {
     key: '/portal',
@@ -147,6 +152,9 @@ function getSelectedKey(pathname: string): string {
     '/portal/catalog',
     '/portal/orders',
     '/portal/invoices',
+    '/reports/sales',
+    '/reports/purchase',
+    '/reports/inventory',
     '/parties',
     '/reports',
   ]

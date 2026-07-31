@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Layout, Button, Avatar, Dropdown, Badge, Space, Breadcrumb, Drawer, List, Typography, Empty } from 'antd'
+import { useState, useEffect, useRef } from 'react'
+import { Layout, Button, Avatar, Dropdown, Badge, Space, Breadcrumb, Drawer, List, Typography, Empty, Input, message } from 'antd'
+import type { InputRef } from 'antd'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -69,6 +70,25 @@ function useBreadcrumbs() {
   return crumbs
 }
 
+function useGlobalSearch() {
+  const searchRef = useRef<InputRef | null>(null)
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().includes('MAC')
+      const modifier = isMac ? e.metaKey : e.ctrlKey
+      if (modifier && e.key === 'k') {
+        e.preventDefault()
+        searchRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
+  return searchRef
+}
+
 interface Notification {
   id: string
   type: 'BELL' | 'ALERT' | 'LINK' | string
@@ -93,6 +113,7 @@ export default function Topbar() {
   const breadcrumbs = useBreadcrumbs()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const queryClient = useQueryClient()
+  const searchRef = useGlobalSearch()
 
   const { data: countData } = useQuery({
     queryKey: ['notifications-count'],
@@ -179,6 +200,17 @@ export default function Topbar() {
           />
           <Breadcrumb items={breadcrumbs} style={{ fontSize: 13 }} />
         </Space>
+
+        {/* Global Search — center */}
+        <Input.Search
+          ref={searchRef}
+          placeholder="Search… (Ctrl+K / ⌘K)"
+          style={{ width: 300 }}
+          allowClear
+          onSearch={() => {
+            message.info('Search coming soon')
+          }}
+        />
 
         <Space size={16} align="center">
           <Badge count={unreadCount} showZero={false}>

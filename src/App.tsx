@@ -37,7 +37,11 @@ const Gstr2aPage = React.lazy(() => import('./modules/gst/Gstr2aPage'))
 
 // Stub pages (not yet implemented as full pages)
 const GrnListPage = React.lazy(() => import('./modules/stubs/StubPage'))
-const ReportsPage = React.lazy(() => import('./modules/stubs/StubPage'))
+
+// Reports
+const SalesReportPage = React.lazy(() => import('./modules/reports/SalesReportPage'))
+const PurchaseReportPage = React.lazy(() => import('./modules/reports/PurchaseReportPage'))
+const InventoryReportPage = React.lazy(() => import('./modules/reports/InventoryReportPage'))
 
 // Accounts
 const ChartOfAccountsPage = React.lazy(() => import('./modules/accounts/ChartOfAccountsPage'))
@@ -108,7 +112,9 @@ export default function App() {
             <Route path="accounts/reports" element={<FinancialReportsPage />} />
 
             {/* Reports */}
-            <Route path="reports/*" element={<ReportsPage />} />
+            <Route path="reports/sales" element={<SalesReportPage />} />
+            <Route path="reports/purchase" element={<PurchaseReportPage />} />
+            <Route path="reports/inventory" element={<InventoryReportPage />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
