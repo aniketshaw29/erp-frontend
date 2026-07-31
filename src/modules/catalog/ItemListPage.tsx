@@ -9,6 +9,7 @@ import AmountDisplay from '../../components/AmountDisplay'
 import { getItems } from '../../api/modules/catalog.api'
 import type { Item, ItemType } from '../../types/catalog.types'
 import { usePagination } from '../../hooks/usePagination'
+import ItemFormDrawer from './ItemFormDrawer'
 
 const { Option } = Select
 
@@ -21,12 +22,29 @@ const itemTypeColors: Record<ItemType, string> = {
 export default function ItemListPage() {
   const [search, setSearch] = useState('')
   const [itemType, setItemType] = useState<string | undefined>()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [editingItem, setEditingItem] = useState<Item | null>(null)
   const { page, pageSize, onPageChange } = usePagination()
 
   const { data, isLoading } = useQuery({
     queryKey: ['items', page, pageSize, search, itemType],
     queryFn: () => getItems({ page, size: pageSize, search, itemType }),
   })
+
+  const handleNewItem = () => {
+    setEditingItem(null)
+    setDrawerOpen(true)
+  }
+
+  const handleRowClick = (record: Item) => {
+    setEditingItem(record)
+    setDrawerOpen(true)
+  }
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false)
+    setEditingItem(null)
+  }
 
   const columns: ColumnsType<Item> = [
     {
@@ -44,9 +62,7 @@ export default function ItemListPage() {
       title: 'Type',
       dataIndex: 'itemType',
       key: 'itemType',
-      render: (type: ItemType) => (
-        <Tag color={itemTypeColors[type]}>{type}</Tag>
-      ),
+      render: (type: ItemType) => <Tag color={itemTypeColors[type]}>{type}</Tag>,
     },
     {
       title: 'GST Rate',
@@ -60,7 +76,13 @@ export default function ItemListPage() {
       dataIndex: 'standardRate',
       key: 'standardRate',
       align: 'right',
-      render: (rate: number) => <AmountDisplay amount={rate} />,
+      render: (rate: number) => <AmountDisplay amount={rate ?? 0} />,
+    },
+    {
+      title: 'Tracking',
+      dataIndex: 'trackingType',
+      key: 'trackingType',
+      render: (v: string) => <Tag>{v}</Tag>,
     },
     {
       title: 'Status',
@@ -78,7 +100,7 @@ export default function ItemListPage() {
         title="Items"
         subtitle="Manage your product catalog"
         actions={
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleNewItem}>
             New Item
           </Button>
         }
@@ -116,6 +138,14 @@ export default function ItemListPage() {
           pageSize,
         }}
         onPageChange={onPageChange}
+        rowKey="id"
+        onRowClick={handleRowClick}
+      />
+
+      <ItemFormDrawer
+        open={drawerOpen}
+        item={editingItem}
+        onClose={handleDrawerClose}
       />
     </div>
   )

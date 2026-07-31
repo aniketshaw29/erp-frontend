@@ -1,4 +1,4 @@
-import { Layout, Button, Avatar, Dropdown, Badge, Typography, Space } from 'antd'
+import { Layout, Button, Avatar, Dropdown, Badge, Space, Breadcrumb } from 'antd'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -7,12 +7,53 @@ import {
   LogoutOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useUiStore } from '../store/uiStore'
 import { useAuthStore } from '../store/authStore'
 
 const { Header } = Layout
-const { Text } = Typography
+
+const ROUTE_LABELS: Record<string, string> = {
+  '': 'Dashboard',
+  parties: 'Parties',
+  catalog: 'Catalog',
+  items: 'Items',
+  categories: 'Categories',
+  inventory: 'Inventory',
+  stock: 'Stock',
+  'stock-entry': 'Stock Entry',
+  alerts: 'Alerts',
+  purchase: 'Purchase',
+  orders: 'Orders',
+  grn: 'GRN',
+  bills: 'Bills',
+  sales: 'Sales',
+  invoices: 'Invoices',
+  payments: 'Payments',
+  gst: 'GST',
+  einvoice: 'E-Invoice',
+  gstr1: 'GSTR-1',
+  accounts: 'Accounts',
+  ledger: 'Ledger',
+  outstanding: 'Outstanding',
+  reports: 'Reports',
+  new: 'New',
+}
+
+function useBreadcrumbs() {
+  const location = useLocation()
+  const parts = location.pathname.split('/').filter(Boolean)
+
+  if (parts.length === 0) {
+    return [{ title: 'Dashboard' }]
+  }
+
+  const crumbs: { title: string }[] = [{ title: 'Home' }]
+  parts.forEach((part) => {
+    crumbs.push({ title: ROUTE_LABELS[part] ?? part })
+  })
+  return crumbs
+}
 
 export default function Topbar() {
   const navigate = useNavigate()
@@ -20,6 +61,7 @@ export default function Topbar() {
   const toggleSidebar = useUiStore((s) => s.toggleSidebar)
   const user = useAuthStore((s) => s.user)
   const clearAuth = useAuthStore((s) => s.clearAuth)
+  const breadcrumbs = useBreadcrumbs()
 
   const handleLogout = () => {
     clearAuth()
@@ -64,20 +106,18 @@ export default function Topbar() {
         transition: 'left 0.2s',
       }}
     >
-      <Button
-        type="text"
-        icon={sidebarCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={toggleSidebar}
-        style={{ fontSize: 16 }}
-      />
+      <Space size={16} align="center">
+        <Button
+          type="text"
+          icon={sidebarCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={toggleSidebar}
+          style={{ fontSize: 16 }}
+        />
+        <Breadcrumb items={breadcrumbs} style={{ fontSize: 13 }} />
+      </Space>
 
       <Space size={16} align="center">
-        {user?.tenantName && (
-          <Text type="secondary" style={{ fontSize: 13 }}>
-            {user.tenantName}
-          </Text>
-        )}
-        <Badge count={3} size="small">
+        <Badge count={0} showZero={false}>
           <Button type="text" icon={<BellOutlined style={{ fontSize: 18 }} />} />
         </Badge>
         <Dropdown
@@ -86,8 +126,8 @@ export default function Topbar() {
           trigger={['click']}
         >
           <Space style={{ cursor: 'pointer' }}>
-            <Avatar icon={<UserOutlined />} size="small" />
-            <Text style={{ fontSize: 13 }}>{user?.name ?? 'User'}</Text>
+            <Avatar icon={<UserOutlined />} size="small" style={{ background: '#1677ff' }} />
+            <span style={{ fontSize: 13 }}>{user?.name ?? 'User'}</span>
           </Space>
         </Dropdown>
       </Space>

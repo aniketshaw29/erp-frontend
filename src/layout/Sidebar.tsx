@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { useUiStore } from '../store/uiStore'
+import { useTenant } from '../hooks/useTenant'
 
 const { Sider } = Layout
 
@@ -44,6 +45,7 @@ const menuItems: MenuItem[] = [
     label: 'Inventory',
     children: [
       { key: '/inventory/stock', label: 'Stock' },
+      { key: '/inventory/stock-entry', label: 'Stock Entry' },
       { key: '/inventory/alerts', label: 'Alerts' },
     ],
   },
@@ -91,14 +93,48 @@ const menuItems: MenuItem[] = [
   },
 ]
 
+function getSelectedKey(pathname: string): string {
+  // Exact match first
+  if (pathname === '/') return '/'
+  // Check sub-paths longest first
+  const candidates = [
+    '/inventory/stock-entry',
+    '/inventory/stock',
+    '/inventory/alerts',
+    '/catalog/items',
+    '/catalog/categories',
+    '/purchase/orders',
+    '/purchase/grn',
+    '/purchase/bills',
+    '/sales/invoices',
+    '/sales/payments',
+    '/gst/einvoice',
+    '/gst/gstr1',
+    '/accounts/ledger',
+    '/accounts/outstanding',
+    '/parties',
+    '/reports',
+  ]
+  for (const candidate of candidates) {
+    if (pathname.startsWith(candidate)) return candidate
+  }
+  return '/'
+}
+
+function getOpenKey(pathname: string): string {
+  const parts = pathname.split('/').filter(Boolean)
+  if (parts.length === 0) return ''
+  return '/' + parts[0]
+}
+
 export default function Sidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const sidebarCollapsed = useUiStore((s) => s.sidebarCollapsed)
+  const { tenantName } = useTenant()
 
-  const selectedKey = location.pathname === '/' ? '/' : '/' + location.pathname.split('/').filter(Boolean)[0] + (location.pathname.split('/').length > 2 ? '/' + location.pathname.split('/').filter(Boolean)[1] : '')
-
-  const openKey = '/' + location.pathname.split('/').filter(Boolean)[0]
+  const selectedKey = getSelectedKey(location.pathname)
+  const openKey = getOpenKey(location.pathname)
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
     navigate(key)
@@ -126,19 +162,39 @@ export default function Sidebar() {
           alignItems: 'center',
           justifyContent: 'center',
           color: '#fff',
-          fontSize: sidebarCollapsed ? 16 : 20,
-          fontWeight: 700,
           padding: '0 16px',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
+          overflow: 'hidden',
+          flexDirection: 'column',
+          gap: 2,
         }}
       >
-        {sidebarCollapsed ? 'ERP' : 'ERP Platform'}
+        {sidebarCollapsed ? (
+          <span style={{ fontSize: 18, fontWeight: 700 }}>E</span>
+        ) : (
+          <>
+            <span style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2 }}>ERP Platform</span>
+            <span
+              style={{
+                fontSize: 11,
+                color: 'rgba(255,255,255,0.55)',
+                lineHeight: 1.2,
+                maxWidth: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {tenantName}
+            </span>
+          </>
+        )}
       </div>
       <Menu
         theme="dark"
         mode="inline"
-        selectedKeys={[selectedKey, location.pathname]}
-        defaultOpenKeys={[openKey]}
+        selectedKeys={[selectedKey]}
+        defaultOpenKeys={openKey ? [openKey] : []}
         items={menuItems}
         onClick={handleMenuClick}
         style={{ borderRight: 0 }}

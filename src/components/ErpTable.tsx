@@ -12,6 +12,7 @@ interface ErpTableProps<T extends object> {
   }
   onPageChange: (page: number, pageSize: number) => void
   rowKey?: string | ((record: T) => string)
+  onRowClick?: (record: T) => void
 }
 
 export default function ErpTable<T extends object>({
@@ -21,6 +22,7 @@ export default function ErpTable<T extends object>({
   pagination,
   onPageChange,
   rowKey = 'id',
+  onRowClick,
 }: ErpTableProps<T>) {
   const paginationConfig: TablePaginationConfig = {
     current: pagination.page,
@@ -41,6 +43,7 @@ export default function ErpTable<T extends object>({
       pagination={paginationConfig}
       rowKey={rowKey}
       scroll={{ x: 'max-content' }}
+      onRow={onRowClick ? (record) => ({ onClick: () => onRowClick(record), style: { cursor: 'pointer' } }) : undefined}
       locale={{
         emptyText: <Empty description="No records found" />,
       }}

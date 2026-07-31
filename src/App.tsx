@@ -11,6 +11,7 @@ const PartyListPage = React.lazy(() => import('./modules/party/PartyListPage'))
 const ItemListPage = React.lazy(() => import('./modules/catalog/ItemListPage'))
 const StockListPage = React.lazy(() => import('./modules/inventory/StockListPage'))
 const AlertsPage = React.lazy(() => import('./modules/inventory/AlertsPage'))
+const StockEntryPage = React.lazy(() => import('./modules/inventory/StockEntryPage'))
 const PurchaseOrderListPage = React.lazy(() => import('./modules/purchase/PurchaseOrderListPage'))
 const InvoiceListPage = React.lazy(() => import('./modules/sales/InvoiceListPage'))
 const InvoiceFormPage = React.lazy(() => import('./modules/sales/InvoiceFormPage'))
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="parties/*" element={<PartyListPage />} />
             <Route path="catalog/items" element={<ItemListPage />} />
             <Route path="inventory/stock" element={<StockListPage />} />
+            <Route path="inventory/stock-entry" element={<StockEntryPage />} />
             <Route path="inventory/alerts" element={<AlertsPage />} />
             <Route path="purchase/orders" element={<PurchaseOrderListPage />} />
             <Route path="purchase/grn" element={<GrnPage />} />

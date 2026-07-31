@@ -1,35 +1,58 @@
-import { Tag } from 'antd'
+import { useState } from 'react'
+import { Select, Space } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnsType } from 'antd/es/table'
 import PageHeader from '../../components/PageHeader'
 import ErpTable from '../../components/ErpTable'
-import { getStock } from '../../api/modules/inventory.api'
-import type { StockEntry, StockStatus } from '../../types/inventory.types'
+import { getStock, getWarehouses } from '../../api/modules/inventory.api'
+import type { Stock } from '../../types/inventory.types'
 import { usePagination } from '../../hooks/usePagination'
 
-const statusTagColors: Record<StockStatus, string> = {
-  OK: 'green',
-  LOW: 'orange',
-  CRITICAL: 'red',
+const { Option } = Select
+
+function ExpiryCell({ expiryDate }: { expiryDate?: string }) {
+  if (!expiryDate) return <span>—</span>
+  const days = Math.floor((new Date(expiryDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+  const color = days < 30 ? '#ff4d4f' : days < 90 ? '#fa8c16' : undefined
+  return (
+    <span style={{ color }}>
+      {new Date(expiryDate).toLocaleDateString('en-IN')}
+      {days < 90 && (
+        <span style={{ fontSize: 11, marginLeft: 4 }}>({days}d)</span>
+      )}
+    </span>
+  )
+}
+
+function QtyCell({ qty, reorderLevel }: { qty: number; reorderLevel: number }) {
+  const color = qty <= reorderLevel ? '#ff4d4f' : undefined
+  return <span style={{ color, fontWeight: qty <= reorderLevel ? 600 : undefined }}>{qty}</span>
 }
 
 export default function StockListPage() {
+  const [warehouseId, setWarehouseId] = useState<string | undefined>()
   const { page, pageSize, onPageChange } = usePagination()
 
   const { data, isLoading } = useQuery({
-    queryKey: ['stock', page, pageSize],
-    queryFn: () => getStock({ page, size: pageSize }),
+    queryKey: ['stock', page, pageSize, warehouseId],
+    queryFn: () => getStock({ page, size: pageSize, warehouseId }),
   })
 
-  const columns: ColumnsType<StockEntry> = [
+  const { data: warehouses } = useQuery({
+    queryKey: ['warehouses'],
+    queryFn: getWarehouses,
+  })
+
+  const columns: ColumnsType<Stock> = [
     {
-      title: 'Item',
-      key: 'item',
-      render: (_, record) => (
-        <span>
-          <strong>{record.itemCode}</strong> — {record.itemName}
-        </span>
-      ),
+      title: 'Item Name',
+      dataIndex: 'itemName',
+      key: 'itemName',
+    },
+    {
+      title: 'Item Code',
+      dataIndex: 'itemCode',
+      key: 'itemCode',
     },
     {
       title: 'Warehouse',
@@ -43,30 +66,25 @@ export default function StockListPage() {
       render: (v?: string) => v || '—',
     },
     {
-      title: 'Expiry',
+      title: 'Expiry Date',
       dataIndex: 'expiryDate',
       key: 'expiryDate',
-      render: (v?: string) => (v ? new Date(v).toLocaleDateString('en-IN') : '—'),
+      render: (v?: string) => <ExpiryCell expiryDate={v} />,
     },
     {
       title: 'Qty On Hand',
       dataIndex: 'qtyOnHand',
       key: 'qtyOnHand',
       align: 'right',
+      render: (qty: number, record: Stock) => (
+        <QtyCell qty={qty} reorderLevel={record.reorderLevel} />
+      ),
     },
     {
       title: 'Reorder Level',
       dataIndex: 'reorderLevel',
       key: 'reorderLevel',
       align: 'right',
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: StockStatus) => (
-        <Tag color={statusTagColors[status]}>{status}</Tag>
-      ),
     },
   ]
 
@@ -77,7 +95,23 @@ export default function StockListPage() {
         subtitle="Current inventory across all warehouses"
       />
 
-      <ErpTable<StockEntry>
+      <Space style={{ marginBottom: 16 }}>
+        <Select
+          placeholder="Filter by warehouse"
+          value={warehouseId}
+          onChange={setWarehouseId}
+          allowClear
+          style={{ width: 220 }}
+        >
+          {warehouses?.map((w) => (
+            <Option key={w.id} value={w.id}>
+              {w.name}
+            </Option>
+          ))}
+        </Select>
+      </Space>
+
+      <ErpTable<Stock>
         columns={columns}
         dataSource={data?.data}
         loading={isLoading}
@@ -87,6 +121,7 @@ export default function StockListPage() {
           pageSize,
         }}
         onPageChange={onPageChange}
+        rowKey="id"
       />
     </div>
   )

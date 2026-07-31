@@ -1,18 +1,18 @@
 import axios from 'axios'
 
-const TOKEN_KEY = 'erp_access_token'
-
 export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '',
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-// Request interceptor: attach Authorization header
+// Request interceptor: attach Authorization header from authStore
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem(TOKEN_KEY)
+    // Lazily import to avoid circular dep at module init time
+    // We read directly from localStorage which is the source of truth
+    const token = localStorage.getItem('erp_access_token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -21,12 +21,14 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-// Response interceptor: handle 401
+// Response interceptor: handle 401 – clear auth and redirect
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem(TOKEN_KEY)
+      // Dynamically import to avoid circular dependency
+      const { useAuthStore } = await import('../store/authStore')
+      useAuthStore.getState().clearAuth()
       window.location.href = '/login'
     }
     return Promise.reject(error)

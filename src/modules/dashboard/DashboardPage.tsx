@@ -10,7 +10,7 @@ import {
   Legend,
 } from 'recharts'
 import {
-  DollarOutlined,
+  RiseOutlined,
   WarningOutlined,
   InboxOutlined,
   FileTextOutlined,
@@ -19,13 +19,12 @@ import {
 const { Title } = Typography
 
 const monthlySalesData = [
-  { month: 'Jan', sales: 420000, purchases: 280000 },
-  { month: 'Feb', sales: 380000, purchases: 310000 },
-  { month: 'Mar', sales: 510000, purchases: 340000 },
-  { month: 'Apr', sales: 470000, purchases: 290000 },
-  { month: 'May', sales: 620000, purchases: 410000 },
-  { month: 'Jun', sales: 580000, purchases: 380000 },
-  { month: 'Jul', sales: 710000, purchases: 460000 },
+  { month: 'Feb', sales: 0, purchases: 0 },
+  { month: 'Mar', sales: 0, purchases: 0 },
+  { month: 'Apr', sales: 0, purchases: 0 },
+  { month: 'May', sales: 0, purchases: 0 },
+  { month: 'Jun', sales: 0, purchases: 0 },
+  { month: 'Jul', sales: 0, purchases: 0 },
 ]
 
 export default function DashboardPage() {
@@ -40,8 +39,8 @@ export default function DashboardPage() {
           <Card>
             <Statistic
               title="Today's Sales"
-              value={84500}
-              prefix={<DollarOutlined />}
+              value={0}
+              prefix={<RiseOutlined />}
               formatter={(val) => `₹${Number(val).toLocaleString('en-IN')}`}
               valueStyle={{ color: '#1677ff' }}
             />
@@ -50,8 +49,8 @@ export default function DashboardPage() {
         <Col xs={24} sm={12} lg={6}>
           <Card>
             <Statistic
-              title="Outstanding Receivables"
-              value={342000}
+              title="Total Outstanding"
+              value={0}
               prefix={<WarningOutlined />}
               formatter={(val) => `₹${Number(val).toLocaleString('en-IN')}`}
               valueStyle={{ color: '#faad14' }}
@@ -62,7 +61,7 @@ export default function DashboardPage() {
           <Card>
             <Statistic
               title="Low Stock Items"
-              value={12}
+              value={0}
               prefix={<InboxOutlined />}
               valueStyle={{ color: '#ff4d4f' }}
             />
@@ -72,7 +71,7 @@ export default function DashboardPage() {
           <Card>
             <Statistic
               title="Pending Invoices"
-              value={28}
+              value={0}
               prefix={<FileTextOutlined />}
               valueStyle={{ color: '#52c41a' }}
             />
@@ -80,22 +79,36 @@ export default function DashboardPage() {
         </Col>
       </Row>
 
-      <Card title="Monthly Sales vs Purchases" style={{ marginBottom: 24 }}>
-        <ResponsiveContainer width="100%" height={320}>
+      <Card title="Monthly Sales vs Purchases (Last 6 Months)" style={{ marginBottom: 24 }}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart data={monthlySalesData} margin={{ top: 8, right: 16, left: 16, bottom: 8 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis dataKey="month" tick={{ fontSize: 13 }} />
             <YAxis
-              tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`}
+              tickFormatter={(v) => (v === 0 ? '₹0' : `₹${(v / 1000).toFixed(0)}k`)}
               tick={{ fontSize: 13 }}
             />
             <Tooltip
-              formatter={(value: number) => `₹${value.toLocaleString('en-IN')}`}
+              formatter={(value: number) =>
+                `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`
+              }
               labelStyle={{ fontWeight: 600 }}
             />
             <Legend />
-            <Bar dataKey="sales" name="Sales" fill="#1677ff" radius={[4, 4, 0, 0]} maxBarSize={40} />
-            <Bar dataKey="purchases" name="Purchases" fill="#52c41a" radius={[4, 4, 0, 0]} maxBarSize={40} />
+            <Bar
+              dataKey="sales"
+              name="Sales"
+              fill="#1677ff"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={40}
+            />
+            <Bar
+              dataKey="purchases"
+              name="Purchases"
+              fill="#52c41a"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={40}
+            />
           </BarChart>
         </ResponsiveContainer>
       </Card>

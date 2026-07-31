@@ -10,11 +10,11 @@ export interface PurchaseOrderQueryParams {
 }
 
 export async function getPurchaseOrders(params?: PurchaseOrderQueryParams): Promise<PageResponse<PurchaseOrder>> {
-  const { data } = await apiClient.get<PageResponse<PurchaseOrder>>('/purchase/orders', { params })
+  const { data } = await apiClient.get<PageResponse<PurchaseOrder>>('/api/v1/purchase/orders', { params })
   return data
 }
 
 export async function createPurchaseOrder(orderData: Omit<PurchaseOrder, 'id' | 'poNumber'>): Promise<PurchaseOrder> {
-  const { data } = await apiClient.post<{ data: PurchaseOrder }>('/purchase/orders', orderData)
+  const { data } = await apiClient.post<{ data: PurchaseOrder }>('/api/v1/purchase/orders', orderData)
   return data.data
 }

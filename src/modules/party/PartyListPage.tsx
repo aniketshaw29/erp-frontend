@@ -1,14 +1,16 @@
 import { useState } from 'react'
-import { Button, Input, Select, Space, Tag } from 'antd'
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
+import type { MouseEvent } from 'react'
+import { Button, Input, Select, Space, Tag, Modal, message } from 'antd'
+import { PlusOutlined, SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import type { ColumnsType } from 'antd/es/table'
 import PageHeader from '../../components/PageHeader'
 import ErpTable from '../../components/ErpTable'
 import AmountDisplay from '../../components/AmountDisplay'
-import { getParties } from '../../api/modules/party.api'
+import { getParties, deleteParty } from '../../api/modules/party.api'
 import type { Party, PartyType } from '../../types/party.types'
 import { usePagination } from '../../hooks/usePagination'
+import PartyFormDrawer from './PartyFormDrawer'
 
 const { Option } = Select
 
@@ -21,12 +23,53 @@ const partyTypeColors: Record<PartyType, string> = {
 export default function PartyListPage() {
   const [search, setSearch] = useState('')
   const [partyType, setPartyType] = useState<string | undefined>()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [editingParty, setEditingParty] = useState<Party | null>(null)
   const { page, pageSize, onPageChange } = usePagination()
+  const queryClient = useQueryClient()
 
   const { data, isLoading } = useQuery({
     queryKey: ['parties', page, pageSize, search, partyType],
     queryFn: () => getParties({ page, size: pageSize, search, partyType }),
   })
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteParty,
+    onSuccess: () => {
+      message.success('Party deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['parties'] })
+    },
+    onError: () => {
+      message.error('Failed to delete party')
+    },
+  })
+
+  const handleNewParty = () => {
+    setEditingParty(null)
+    setDrawerOpen(true)
+  }
+
+  const handleRowClick = (record: Party) => {
+    setEditingParty(record)
+    setDrawerOpen(true)
+  }
+
+  const handleDeleteConfirm = (id: string, e: MouseEvent) => {
+    e.stopPropagation()
+    Modal.confirm({
+      title: 'Delete Party',
+      content: 'Are you sure you want to delete this party? This action cannot be undone.',
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: () => deleteMutation.mutate(id),
+    })
+  }
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false)
+    setEditingParty(null)
+  }
 
   const columns: ColumnsType<Party> = [
     {
@@ -39,9 +82,7 @@ export default function PartyListPage() {
       title: 'Type',
       dataIndex: 'partyType',
       key: 'partyType',
-      render: (type: PartyType) => (
-        <Tag color={partyTypeColors[type]}>{type}</Tag>
-      ),
+      render: (type: PartyType) => <Tag color={partyTypeColors[type]}>{type}</Tag>,
     },
     {
       title: 'GSTIN',
@@ -56,11 +97,11 @@ export default function PartyListPage() {
       render: (v?: string) => v || '—',
     },
     {
-      title: 'Outstanding',
-      dataIndex: 'outstandingAmount',
-      key: 'outstandingAmount',
+      title: 'Credit Limit',
+      dataIndex: 'creditLimit',
+      key: 'creditLimit',
       align: 'right',
-      render: (amount: number) => <AmountDisplay amount={amount} />,
+      render: (amount: number) => <AmountDisplay amount={amount ?? 0} />,
     },
     {
       title: 'Status',
@@ -68,6 +109,33 @@ export default function PartyListPage() {
       key: 'isActive',
       render: (isActive: boolean) => (
         <Tag color={isActive ? 'green' : 'red'}>{isActive ? 'Active' : 'Inactive'}</Tag>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      align: 'center',
+      render: (_, record) => (
+        <Space size={4} onClick={(e) => e.stopPropagation()}>
+          <Button
+            type="text"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={(e) => {
+              e.stopPropagation()
+              setEditingParty(record)
+              setDrawerOpen(true)
+            }}
+          />
+          <Button
+            type="text"
+            size="small"
+            danger
+            icon={<DeleteOutlined />}
+            loading={deleteMutation.isPending && deleteMutation.variables === record.id}
+            onClick={(e) => handleDeleteConfirm(record.id, e)}
+          />
+        </Space>
       ),
     },
   ]
@@ -78,7 +146,7 @@ export default function PartyListPage() {
         title="Parties"
         subtitle="Manage vendors, customers, and business associates"
         actions={
-          <Button type="primary" icon={<PlusOutlined />}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleNewParty}>
             New Party
           </Button>
         }
@@ -116,6 +184,14 @@ export default function PartyListPage() {
           pageSize,
         }}
         onPageChange={onPageChange}
+        rowKey="id"
+        onRowClick={handleRowClick}
+      />
+
+      <PartyFormDrawer
+        open={drawerOpen}
+        party={editingParty}
+        onClose={handleDrawerClose}
       />
     </div>
   )

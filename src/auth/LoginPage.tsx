@@ -11,7 +11,7 @@ const { Title, Text } = Typography
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
-  password: z.string().min(1, 'Password is required'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 })
 
 type LoginFormData = z.infer<typeof loginSchema>
@@ -27,13 +27,19 @@ export default function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
   })
 
   const onSubmit = async (data: LoginFormData) => {
     setError(null)
     try {
       const response = await login(data.email, data.password)
-      setAuth(response.user, response.user.tenantId, response.accessToken)
+      setAuth(
+        response.user,
+        response.user.tenantId,
+        response.accessToken,
+        response.refreshToken,
+      )
       navigate('/')
     } catch {
       setError('Invalid email or password. Please try again.')
@@ -52,6 +58,24 @@ export default function LoginPage() {
     >
       <Card style={{ width: 400, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          {/* Logo placeholder */}
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 12,
+              background: '#1677ff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 12px',
+              fontSize: 24,
+              fontWeight: 700,
+              color: '#fff',
+            }}
+          >
+            E
+          </div>
           <Title level={3} style={{ margin: 0 }}>
             ERP Platform
           </Title>
@@ -69,7 +93,6 @@ export default function LoginPage() {
             <Controller
               name="email"
               control={control}
-              defaultValue=""
               render={({ field }) => (
                 <Input {...field} type="email" placeholder="you@example.com" size="large" />
               )}
@@ -84,7 +107,6 @@ export default function LoginPage() {
             <Controller
               name="password"
               control={control}
-              defaultValue=""
               render={({ field }) => (
                 <Input.Password {...field} placeholder="Your password" size="large" />
               )}
@@ -106,7 +128,7 @@ export default function LoginPage() {
 
         <div style={{ textAlign: 'center' }}>
           <Text type="secondary">
-            New to ERP Platform?{' '}
+            Don&apos;t have an account?{' '}
             <Link to="/register">Create an account</Link>
           </Text>
         </div>

@@ -1,4 +1,4 @@
-import { Typography, Table, Tag } from 'antd'
+import { Button, Typography, Table, Tag } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import type { ColumnsType } from 'antd/es/table'
 import PageHeader from '../../components/PageHeader'
@@ -20,7 +20,11 @@ export default function AlertsPage() {
     {
       title: 'Item',
       key: 'item',
-      render: (_, record) => `${record.itemCode} — ${record.itemName}`,
+      render: (_, record) => (
+        <span>
+          <strong>{record.itemCode}</strong> — {record.itemName}
+        </span>
+      ),
     },
     {
       title: 'Warehouse',
@@ -32,6 +36,9 @@ export default function AlertsPage() {
       dataIndex: 'qtyOnHand',
       key: 'qtyOnHand',
       align: 'right',
+      render: (v?: number) => (
+        <span style={{ color: '#ff4d4f', fontWeight: 600 }}>{v ?? '—'}</span>
+      ),
     },
     {
       title: 'Reorder Level',
@@ -50,18 +57,32 @@ export default function AlertsPage() {
         return <Tag color={color}>{label}</Tag>
       },
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: () => (
+        <Button size="small" disabled>
+          Create PO
+        </Button>
+      ),
+    },
   ]
 
   const expiryColumns: ColumnsType<StockAlert> = [
     {
       title: 'Item',
       key: 'item',
-      render: (_, record) => `${record.itemCode} — ${record.itemName}`,
+      render: (_, record) => (
+        <span>
+          <strong>{record.itemCode}</strong> — {record.itemName}
+        </span>
+      ),
     },
     {
-      title: 'Warehouse',
-      dataIndex: 'warehouseName',
-      key: 'warehouseName',
+      title: 'Batch No',
+      dataIndex: 'batchNo',
+      key: 'batchNo',
+      render: (v?: string) => v || '—',
     },
     {
       title: 'Expiry Date',
@@ -70,7 +91,7 @@ export default function AlertsPage() {
       render: (v?: string) => (v ? new Date(v).toLocaleDateString('en-IN') : '—'),
     },
     {
-      title: 'Days Until Expiry',
+      title: 'Days Remaining',
       dataIndex: 'daysUntilExpiry',
       key: 'daysUntilExpiry',
       render: (days?: number) => {
@@ -78,6 +99,13 @@ export default function AlertsPage() {
         const color = days <= 7 ? 'red' : days <= 30 ? 'orange' : 'green'
         return <Tag color={color}>{days} days</Tag>
       },
+    },
+    {
+      title: 'Qty',
+      dataIndex: 'qtyOnHand',
+      key: 'qtyOnHand',
+      align: 'right',
+      render: (v?: number) => v ?? '—',
     },
   ]
 
@@ -98,6 +126,7 @@ export default function AlertsPage() {
         rowKey="id"
         pagination={{ pageSize: 10 }}
         style={{ marginBottom: 32 }}
+        scroll={{ x: 'max-content' }}
       />
 
       <Title level={5} style={{ marginBottom: 12 }}>
@@ -109,6 +138,7 @@ export default function AlertsPage() {
         loading={isLoading}
         rowKey="id"
         pagination={{ pageSize: 10 }}
+        scroll={{ x: 'max-content' }}
       />
     </div>
   )
