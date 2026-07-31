@@ -54,6 +54,19 @@ export const createCreditNote = (data: any) =>
 export const getStockBatches = (itemId: string) =>
   apiClient.get<{ data: StockBatch[] }>('/api/v1/stock/batches', { params: { itemId } })
 
+// Linked transactions
+export const getInboundTransactions = () =>
+  apiClient.get('/api/v1/linked-transactions/inbound')
+
+export const getOutboundTransactions = () =>
+  apiClient.get('/api/v1/linked-transactions/outbound')
+
+export const acceptTransaction = (id: string) =>
+  apiClient.post(`/api/v1/linked-transactions/${id}/accept`)
+
+export const rejectTransaction = (id: string, reason: string) =>
+  apiClient.post(`/api/v1/linked-transactions/${id}/reject`, { reason })
+
 export interface StockBatch {
   id: string
   batchNo: string

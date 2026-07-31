@@ -10,6 +10,8 @@ import {
   AuditOutlined,
   AccountBookOutlined,
   BarChartOutlined,
+  SwapOutlined,
+  GlobalOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { useUiStore } from '../store/uiStore'
@@ -68,6 +70,7 @@ const menuItems: MenuItem[] = [
       { key: '/sales/payments', label: 'Payments' },
       { key: '/sales/outstanding', label: 'Outstanding' },
       { key: '/sales/credit-notes/new', label: 'Credit Notes' },
+      { key: '/sales/linked-transactions', label: 'Linked Transactions', icon: <SwapOutlined /> },
     ],
   },
   {
@@ -100,6 +103,17 @@ const menuItems: MenuItem[] = [
     icon: <BarChartOutlined />,
     label: 'Reports',
   },
+  {
+    key: '/portal',
+    icon: <GlobalOutlined />,
+    label: 'Portal',
+    children: [
+      { key: '/portal/dashboard', label: 'Dashboard' },
+      { key: '/portal/catalog', label: 'Catalog' },
+      { key: '/portal/orders', label: 'My Orders' },
+      { key: '/portal/invoices', label: 'My Invoices' },
+    ],
+  },
 ]
 
 function getSelectedKey(pathname: string): string {
@@ -113,6 +127,7 @@ function getSelectedKey(pathname: string): string {
     '/purchase/orders',
     '/purchase/grn',
     '/purchase/bills',
+    '/sales/linked-transactions',
     '/sales/invoices',
     '/sales/payments',
     '/sales/outstanding',
@@ -128,6 +143,10 @@ function getSelectedKey(pathname: string): string {
     '/accounts/party-statement',
     '/accounts/outstanding',
     '/accounts/reports',
+    '/portal/dashboard',
+    '/portal/catalog',
+    '/portal/orders',
+    '/portal/invoices',
     '/parties',
     '/reports',
   ]

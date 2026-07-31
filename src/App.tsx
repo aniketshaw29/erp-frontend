@@ -26,6 +26,7 @@ const InvoiceFormPage = React.lazy(() => import('./modules/sales/InvoiceFormPage
 const PaymentPage = React.lazy(() => import('./modules/sales/PaymentPage'))
 const OutstandingPage = React.lazy(() => import('./modules/sales/OutstandingPage'))
 const CreditNoteFormPage = React.lazy(() => import('./modules/sales/CreditNoteFormPage'))
+const LinkedTransactionsPage = React.lazy(() => import('./modules/sales/LinkedTransactionsPage'))
 
 // GST
 const GstConfigPage = React.lazy(() => import('./modules/gst/GstConfigPage'))
@@ -45,6 +46,13 @@ const LedgerPage = React.lazy(() => import('./modules/accounts/LedgerPage'))
 const PartyStatementPage = React.lazy(() => import('./modules/accounts/PartyStatementPage'))
 const AccountsOutstandingPage = React.lazy(() => import('./modules/accounts/OutstandingPage'))
 const FinancialReportsPage = React.lazy(() => import('./modules/accounts/FinancialReportsPage'))
+
+// Portal
+const PortalLayout = React.lazy(() => import('./modules/portal/PortalLayout'))
+const PortalDashboardPage = React.lazy(() => import('./modules/portal/PortalDashboardPage'))
+const PortalCatalogPage = React.lazy(() => import('./modules/portal/PortalCatalogPage'))
+const PortalOrdersPage = React.lazy(() => import('./modules/portal/PortalOrdersPage'))
+const PortalInvoicesPage = React.lazy(() => import('./modules/portal/PortalInvoicesPage'))
 
 const PageLoader = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -82,6 +90,7 @@ export default function App() {
             <Route path="sales/payments" element={<PaymentPage />} />
             <Route path="sales/outstanding" element={<OutstandingPage />} />
             <Route path="sales/credit-notes/new" element={<CreditNoteFormPage />} />
+            <Route path="sales/linked-transactions" element={<LinkedTransactionsPage />} />
 
             {/* GST */}
             <Route path="gst/config" element={<GstConfigPage />} />
@@ -102,6 +111,15 @@ export default function App() {
             <Route path="reports/*" element={<ReportsPage />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+
+          {/* Portal — uses its own layout */}
+          <Route path="portal" element={<PortalLayout />}>
+            <Route index element={<Navigate to="/portal/dashboard" replace />} />
+            <Route path="dashboard" element={<PortalDashboardPage />} />
+            <Route path="catalog" element={<PortalCatalogPage />} />
+            <Route path="orders" element={<PortalOrdersPage />} />
+            <Route path="invoices" element={<PortalInvoicesPage />} />
           </Route>
         </Route>
       </Routes>

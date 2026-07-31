@@ -5,12 +5,12 @@ interface ErpTableProps<T extends object> {
   columns: ColumnsType<T>
   dataSource: T[] | undefined
   loading: boolean
-  pagination: {
+  pagination?: {
     total: number
     page: number
     pageSize: number
   }
-  onPageChange: (page: number, pageSize: number) => void
+  onPageChange?: (page: number, pageSize: number) => void
   rowKey?: string | ((record: T) => string)
   onRowClick?: (record: T) => void
 }
@@ -24,16 +24,18 @@ export default function ErpTable<T extends object>({
   rowKey = 'id',
   onRowClick,
 }: ErpTableProps<T>) {
-  const paginationConfig: TablePaginationConfig = {
-    current: pagination.page,
-    pageSize: pagination.pageSize,
-    total: pagination.total,
-    onChange: onPageChange,
-    onShowSizeChange: onPageChange,
-    showSizeChanger: true,
-    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} records`,
-    pageSizeOptions: ['10', '20', '50', '100'],
-  }
+  const paginationConfig: TablePaginationConfig | false = pagination
+    ? {
+        current: pagination.page,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
+        onChange: onPageChange,
+        onShowSizeChange: onPageChange,
+        showSizeChanger: true,
+        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} records`,
+        pageSizeOptions: ['10', '20', '50', '100'],
+      }
+    : false
 
   return (
     <Table<T>
