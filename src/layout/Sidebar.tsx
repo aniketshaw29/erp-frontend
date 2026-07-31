@@ -66,6 +66,8 @@ const menuItems: MenuItem[] = [
     children: [
       { key: '/sales/invoices', label: 'Invoices' },
       { key: '/sales/payments', label: 'Payments' },
+      { key: '/sales/outstanding', label: 'Outstanding' },
+      { key: '/sales/credit-notes/new', label: 'Credit Notes' },
     ],
   },
   {
@@ -83,7 +85,6 @@ const menuItems: MenuItem[] = [
     label: 'Accounts',
     children: [
       { key: '/accounts/ledger', label: 'Ledger' },
-      { key: '/accounts/outstanding', label: 'Outstanding' },
     ],
   },
   {
@@ -94,9 +95,7 @@ const menuItems: MenuItem[] = [
 ]
 
 function getSelectedKey(pathname: string): string {
-  // Exact match first
   if (pathname === '/') return '/'
-  // Check sub-paths longest first
   const candidates = [
     '/inventory/stock-entry',
     '/inventory/stock',
@@ -108,10 +107,11 @@ function getSelectedKey(pathname: string): string {
     '/purchase/bills',
     '/sales/invoices',
     '/sales/payments',
+    '/sales/outstanding',
+    '/sales/credit-notes',
     '/gst/einvoice',
     '/gst/gstr1',
     '/accounts/ledger',
-    '/accounts/outstanding',
     '/parties',
     '/reports',
   ]
@@ -119,6 +119,16 @@ function getSelectedKey(pathname: string): string {
     if (pathname.startsWith(candidate)) return candidate
   }
   return '/'
+}
+
+// Map leaf paths that redirect elsewhere to their sidebar key
+const aliasMap: Record<string, string> = {
+  '/sales/credit-notes': '/sales/credit-notes/new',
+}
+
+function resolveSelectedKey(pathname: string): string {
+  const raw = getSelectedKey(pathname)
+  return aliasMap[raw] ?? raw
 }
 
 function getOpenKey(pathname: string): string {
@@ -133,7 +143,7 @@ export default function Sidebar() {
   const sidebarCollapsed = useUiStore((s) => s.sidebarCollapsed)
   const { tenantName } = useTenant()
 
-  const selectedKey = getSelectedKey(location.pathname)
+  const selectedKey = resolveSelectedKey(location.pathname)
   const openKey = getOpenKey(location.pathname)
 
   const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
