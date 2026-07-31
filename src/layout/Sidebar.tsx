@@ -87,7 +87,12 @@ const menuItems: MenuItem[] = [
     icon: <AccountBookOutlined />,
     label: 'Accounts',
     children: [
-      { key: '/accounts/ledger', label: 'Ledger' },
+      { key: '/accounts/chart', label: 'Chart of Accounts' },
+      { key: '/accounts/journals', label: 'Journal Entries' },
+      { key: '/accounts/ledger', label: 'Account Ledger' },
+      { key: '/accounts/party-statement', label: 'Party Statement' },
+      { key: '/accounts/outstanding', label: 'Outstanding' },
+      { key: '/accounts/reports', label: 'Financial Reports' },
     ],
   },
   {
@@ -117,7 +122,12 @@ function getSelectedKey(pathname: string): string {
     '/gst/gstr1',
     '/gst/gstr3b',
     '/gst/gstr2a',
+    '/accounts/chart',
+    '/accounts/journals',
     '/accounts/ledger',
+    '/accounts/party-statement',
+    '/accounts/outstanding',
+    '/accounts/reports',
     '/parties',
     '/reports',
   ]

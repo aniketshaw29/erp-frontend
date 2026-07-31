@@ -36,8 +36,15 @@ const Gstr2aPage = React.lazy(() => import('./modules/gst/Gstr2aPage'))
 
 // Stub pages (not yet implemented as full pages)
 const GrnListPage = React.lazy(() => import('./modules/stubs/StubPage'))
-const LedgerPage = React.lazy(() => import('./modules/stubs/StubPage'))
 const ReportsPage = React.lazy(() => import('./modules/stubs/StubPage'))
+
+// Accounts
+const ChartOfAccountsPage = React.lazy(() => import('./modules/accounts/ChartOfAccountsPage'))
+const JournalEntryPage = React.lazy(() => import('./modules/accounts/JournalEntryPage'))
+const LedgerPage = React.lazy(() => import('./modules/accounts/LedgerPage'))
+const PartyStatementPage = React.lazy(() => import('./modules/accounts/PartyStatementPage'))
+const AccountsOutstandingPage = React.lazy(() => import('./modules/accounts/OutstandingPage'))
+const FinancialReportsPage = React.lazy(() => import('./modules/accounts/FinancialReportsPage'))
 
 const PageLoader = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -84,7 +91,12 @@ export default function App() {
             <Route path="gst/gstr2a" element={<Gstr2aPage />} />
 
             {/* Accounts */}
+            <Route path="accounts/chart" element={<ChartOfAccountsPage />} />
+            <Route path="accounts/journals" element={<JournalEntryPage />} />
             <Route path="accounts/ledger" element={<LedgerPage />} />
+            <Route path="accounts/party-statement" element={<PartyStatementPage />} />
+            <Route path="accounts/outstanding" element={<AccountsOutstandingPage />} />
+            <Route path="accounts/reports" element={<FinancialReportsPage />} />
 
             {/* Reports */}
             <Route path="reports/*" element={<ReportsPage />} />
