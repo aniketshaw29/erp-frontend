@@ -75,8 +75,11 @@ const menuItems: MenuItem[] = [
     icon: <AuditOutlined />,
     label: 'GST',
     children: [
+      { key: '/gst/config', label: 'Configuration' },
       { key: '/gst/einvoice', label: 'E-Invoice' },
       { key: '/gst/gstr1', label: 'GSTR-1' },
+      { key: '/gst/gstr3b', label: 'GSTR-3B' },
+      { key: '/gst/gstr2a', label: 'GSTR-2A Reconciliation' },
     ],
   },
   {
@@ -109,8 +112,11 @@ function getSelectedKey(pathname: string): string {
     '/sales/payments',
     '/sales/outstanding',
     '/sales/credit-notes',
+    '/gst/config',
     '/gst/einvoice',
     '/gst/gstr1',
+    '/gst/gstr3b',
+    '/gst/gstr2a',
     '/accounts/ledger',
     '/parties',
     '/reports',

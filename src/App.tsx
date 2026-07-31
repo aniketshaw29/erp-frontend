@@ -27,10 +27,15 @@ const PaymentPage = React.lazy(() => import('./modules/sales/PaymentPage'))
 const OutstandingPage = React.lazy(() => import('./modules/sales/OutstandingPage'))
 const CreditNoteFormPage = React.lazy(() => import('./modules/sales/CreditNoteFormPage'))
 
+// GST
+const GstConfigPage = React.lazy(() => import('./modules/gst/GstConfigPage'))
+const EInvoicePage = React.lazy(() => import('./modules/gst/EInvoicePage'))
+const Gstr1Page = React.lazy(() => import('./modules/gst/Gstr1Page'))
+const Gstr3bPage = React.lazy(() => import('./modules/gst/Gstr3bPage'))
+const Gstr2aPage = React.lazy(() => import('./modules/gst/Gstr2aPage'))
+
 // Stub pages (not yet implemented as full pages)
 const GrnListPage = React.lazy(() => import('./modules/stubs/StubPage'))
-const EInvoicePage = React.lazy(() => import('./modules/stubs/StubPage'))
-const Gstr1Page = React.lazy(() => import('./modules/stubs/StubPage'))
 const LedgerPage = React.lazy(() => import('./modules/stubs/StubPage'))
 const ReportsPage = React.lazy(() => import('./modules/stubs/StubPage'))
 
@@ -72,8 +77,11 @@ export default function App() {
             <Route path="sales/credit-notes/new" element={<CreditNoteFormPage />} />
 
             {/* GST */}
+            <Route path="gst/config" element={<GstConfigPage />} />
             <Route path="gst/einvoice" element={<EInvoicePage />} />
             <Route path="gst/gstr1" element={<Gstr1Page />} />
+            <Route path="gst/gstr3b" element={<Gstr3bPage />} />
+            <Route path="gst/gstr2a" element={<Gstr2aPage />} />
 
             {/* Accounts */}
             <Route path="accounts/ledger" element={<LedgerPage />} />
