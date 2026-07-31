@@ -51,6 +51,13 @@ const PartyStatementPage = React.lazy(() => import('./modules/accounts/PartyStat
 const AccountsOutstandingPage = React.lazy(() => import('./modules/accounts/OutstandingPage'))
 const FinancialReportsPage = React.lazy(() => import('./modules/accounts/FinancialReportsPage'))
 
+// HR & Payroll
+const EmployeeListPage = React.lazy(() => import('./modules/hr/EmployeeListPage'))
+const AttendancePage = React.lazy(() => import('./modules/hr/AttendancePage'))
+const LeaveManagementPage = React.lazy(() => import('./modules/hr/LeaveManagementPage'))
+const PayrollPage = React.lazy(() => import('./modules/hr/PayrollPage'))
+const OrgChartPage = React.lazy(() => import('./modules/hr/OrgChartPage'))
+
 // Portal
 const PortalLayout = React.lazy(() => import('./modules/portal/PortalLayout'))
 const PortalDashboardPage = React.lazy(() => import('./modules/portal/PortalDashboardPage'))
@@ -115,6 +122,13 @@ export default function App() {
             <Route path="reports/sales" element={<SalesReportPage />} />
             <Route path="reports/purchase" element={<PurchaseReportPage />} />
             <Route path="reports/inventory" element={<InventoryReportPage />} />
+
+            {/* HR & Payroll */}
+            <Route path="hr/employees" element={<EmployeeListPage />} />
+            <Route path="hr/attendance" element={<AttendancePage />} />
+            <Route path="hr/leave" element={<LeaveManagementPage />} />
+            <Route path="hr/payroll" element={<PayrollPage />} />
+            <Route path="hr/org-chart" element={<OrgChartPage />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

@@ -12,6 +12,10 @@ import {
   BarChartOutlined,
   SwapOutlined,
   GlobalOutlined,
+  UserOutlined,
+  CalendarOutlined,
+  BankOutlined,
+  ApartmentOutlined,
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { useUiStore } from '../store/uiStore'
@@ -119,6 +123,18 @@ const menuItems: MenuItem[] = [
       { key: '/portal/invoices', label: 'My Invoices' },
     ],
   },
+  {
+    key: '/hr',
+    icon: <TeamOutlined />,
+    label: 'HR & Payroll',
+    children: [
+      { key: '/hr/employees', label: 'Employees', icon: <UserOutlined /> },
+      { key: '/hr/attendance', label: 'Attendance', icon: <CalendarOutlined /> },
+      { key: '/hr/leave', label: 'Leave Management', icon: <FileTextOutlined /> },
+      { key: '/hr/payroll', label: 'Payroll', icon: <BankOutlined /> },
+      { key: '/hr/org-chart', label: 'Org Chart', icon: <ApartmentOutlined /> },
+    ],
+  },
 ]
 
 function getSelectedKey(pathname: string): string {
@@ -155,6 +171,11 @@ function getSelectedKey(pathname: string): string {
     '/reports/sales',
     '/reports/purchase',
     '/reports/inventory',
+    '/hr/employees',
+    '/hr/attendance',
+    '/hr/leave',
+    '/hr/payroll',
+    '/hr/org-chart',
     '/parties',
     '/reports',
   ]
